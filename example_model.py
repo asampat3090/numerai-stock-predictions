@@ -2,7 +2,6 @@
 
 """
 Example classifier on Numerai data using a logistic regression classifier.
-To get started, install the required packages: pip install pandas, numpy, sklearn
 """
 import numpy as np
 import pandas as pd
@@ -13,7 +12,7 @@ import json
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import LabelEncoder 
+from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 import random
 random.seed(0)
@@ -51,20 +50,20 @@ def main():
     training_data.reset_index( drop = True, inplace = True )
     Y = le.fit_transform(Y)
     X.fillna(0, inplace=True)
-    
+
     #*** Split into training and testing data
     X_train, X_val, y_train, y_val = train_test_split(X, Y, test_size=0.2)
     X_train.sort_index(axis=1, inplace=True)
     X_test.sort_index(axis=1,inplace=True)
     X_val.sort_index(axis=1,inplace=True)
 
-    print("Training...")
-    model = XGBClassifier() 
+    print("Training and Validation...")
+    model = XGBClassifier()
     model.fit(X_train, y_train)
     y_val_pred = model.predict(X_val)
     y_train_pred = model.predict(X_train)
-    #*** Test
-    test_acc = accuracy_score(y_val, y_val_pred)
+
+    val_acc = accuracy_score(y_val, y_val_pred)
     train_acc = accuracy_score(y_train, y_train_pred)
     y_test_pred = model.predict_proba(X_test)
     results = y_test_pred[:, 1]
@@ -72,7 +71,8 @@ def main():
     joined = pd.DataFrame(ids).join(results_df)
 
     # save the classifier
-    stats = {"train accuracy": train_acc,"test accuracy":test_acc, 'label':'initial model',}
+    stats = {"train accuracy": train_acc,"validation accuracy":val_acc,
+    "description": "simple logistic regression. To be improved"}
     # Save the predictions out to a CSV file
     predictions_path = os.path.join(os.getcwd(), 'predictions.csv')
     joined.to_csv(predictions_path, index=False)
