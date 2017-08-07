@@ -1,10 +1,10 @@
-# numerai-competition
+# Numerai Stock Predictions
 
-Repository for numerai challenge. This model is made using xgboost algorithm.
+Repository for the Numerai challenge. This is a base model built using xgboost algorithm.
 
 ## Analysis
 To run analysis, run jupyter notebook
 
-## To run script
-Run the code in example_model.py 
+## To run predictions
+Run the script in example_model.py
 
